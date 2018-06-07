@@ -1,0 +1,24 @@
+Client connect to server:
+
+-blake
+-send requests in java
+-send to infs zone
+-json encode & decode
+-
+
+java -cp ./Main:./Main/json-simple-1.1.1.jar:./Main/jsoup-1.11.3.jar:./Main/unirest-java-1.4.9.jar Main/Server sdfd
+java Main/Server sdfd
+java -cp ./Main/json-simple-1.1.1.jar:./Main/jsoup-1.11.3.jar:./Main/unirest-java-1.4.9.jar Main/Server sdfd
+
+COMPILE:
+
+javac -cp .:./Main/json-simple-1.1.1.jar:./Main/jsoup-1.11.3.jar:./Main/unirest-java-1.4.9.jar ./Main/*.java
+
+RUN:
+Invalid
+		java -cp .:./Main/json-simple-1.1.1.jar:./Main/jsoup-1.11.3.jar:./Main/unirest-java-1.4.9.jar Main/Server {\"type\" : \"ghj\"}
+SearchRecipe
+	257193
+	java -cp .:./Main/json-simple-1.1.1.jar:./Main/jsoup-1.11.3.jar:./Main/unirest-java-1.4.9.jar Main/Server {\"type\" : \"RecipeID\", \"data\": \"257193\"}
+	
+	java -cp .:./Main/json-simple-1.1.1.jar:./Main/jsoup-1.11.3.jar:./Main/unirest-java-1.4.9.jar -Dsun.security.pkcs11.enable-solaris=false Main/Server {\"type\" : \"RecipeID\", \"data\": \"257193\"}
