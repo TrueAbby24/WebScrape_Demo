@@ -13,7 +13,18 @@ import org.json.simple.parser.JSONParser;
 public class HttpRequest {
 	private final static String BASE_URL = "https://infs3202-5eab4a09.uqcloud.net/";
 	
-	
+	public static void main(String[] args) {
+		String buffer;
+		SearchTerms terms = new SearchTerms();
+		terms.addDietReq("vegan");
+		terms.addAllergies("nuts");
+		terms.addAllergies("nuts");
+		terms.addKeywords("white chocolate");
+		terms.addIngredients("flour");
+		terms.addIngredients("egg");
+		System.out.println("1.) data:" + terms.toString());	
+		System.out.println(getSearchResults(terms.toString()));
+	}
 	/**
 	 * Sends a get request to server with given url.
 	 * @param url

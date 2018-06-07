@@ -1,13 +1,6 @@
 package Main;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.Collection;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -27,17 +20,25 @@ public class SearchServer {
 	private final static char URL_SEARCH_LINK = '&';
 	private final static String RECIPE_URL = 
 			"https://www.allrecipes.com/recipe/";
-//	private String searchUrl;
-	private String searchResults;
+	private static String searchResults;
 	
-	public SearchServer(String terms) throws ParseException, IOException{ 
-		//take in user as param for pref and allergies 
-//		construct URL
-		String searchUrl = constructURL(terms);
-		doSearch(searchUrl);
-	}	
+	public static void main(String[] args) throws IOException{
+		String terms = "";
+		for (String s : args) {
+			terms += s;
+		}
+		String url = constructURL(terms);
+		if (url == null) {
+			System.out.println((new JSONObject()).toString());
+			return;
+		}		
+		doSearch(url);
+		System.out.println(getResults());
+	}
+
+
 	
-	private String arraySearchTerms(JSONArray j) {
+	private static String arraySearchTerms(JSONArray j) {
 		String result = "";
 		for(int i = 0; i<j.size(); i++){
 			if (i > 0)
@@ -48,71 +49,73 @@ public class SearchServer {
 		return result;
 	}
 	
-	private void addToJSONArray(JSONArray addTo, JSONArray contents) {
-		for (int i = 0; i<contents.size(); i++) {
-			addTo.add((String) contents.get(i));
-		}
-	}
-	
-	private JSONArray keywords(JSONObject jobj){
+	@SuppressWarnings("unchecked")
+	private static JSONArray keywords(JSONObject jobj){
 		JSONArray result = new JSONArray();
-		JSONArray buffer = null;
-		
-		if(jobj.get("preferences") instanceof JSONArray){
-			buffer = (JSONArray) jobj.get("preferences");
-		}
-		if (buffer.size() != 0)
-			result.addAll(buffer);
-		
-		if(jobj.get("dietary_req") instanceof JSONArray){
-			buffer = (JSONArray) jobj.get("dietary_req");
-		}
-		if (buffer.size() != 0){
-			result.addAll(buffer);
-		}
-		if(jobj.get("keywords") instanceof JSONArray){
-			buffer = (JSONArray) jobj.get("keywords");
-		}
-		if (buffer.size() != 0){
-			result.addAll(buffer);
-		}		
-		return result;
-	}
-	private String constructURL(String terms) throws ParseException {
-		String result = new String(BASE_URL);
-		String allergies, ingredients, keywords;
-//		convert to JSON 
-		JSONParser parse = new JSONParser();
-		JSONObject jobj = (JSONObject) parse.parse(terms);
-//		break-up JSON		
-		JSONArray jKeywords = keywords(jobj);		
-		keywords = arraySearchTerms(jKeywords);		
-		allergies = arraySearchTerms((JSONArray) jobj.get("allergies"));
-		ingredients = arraySearchTerms((JSONArray) jobj.get("ingredients"));
-//		construct URL
-		boolean prevPart = false;
-		if (keywords.length() > 0) {
-			result += "wt=" + keywords;
-			prevPart = true;
-		}
-		if (allergies.length() > 0) {
-			if (prevPart == true) {
-				result += URL_SEARCH_LINK;
+		try {
+			JSONArray buffer = null;
+			if(jobj.get("preferences") instanceof JSONArray){
+				buffer = (JSONArray) jobj.get("preferences");
 			}
-			result += "ingExcl=" + allergies;
-			prevPart = true;
-		}
-		if (ingredients.length() > 0) {
-			if (prevPart == true) {
-				result += URL_SEARCH_LINK;
+			if (buffer.size() != 0)
+				result.addAll(buffer);
+			
+			if(jobj.get("dietary_req") instanceof JSONArray){
+				buffer = (JSONArray) jobj.get("dietary_req");
 			}
-			result += "ingIncl=" + ingredients;
+			if (buffer.size() != 0){
+				result.addAll(buffer);
+			}
+			if(jobj.get("keywords") instanceof JSONArray){
+				buffer = (JSONArray) jobj.get("keywords");
+			}
+			if (buffer.size() != 0){
+				result.addAll(buffer);
+			}		
+		} catch (Exception e) {
+			;
 		}
 		return result;
 	}
-
+	private static String constructURL(String terms) {
+		try{
+			String result = new String(BASE_URL);
+			String allergies, ingredients, keywords;
+	//		convert to JSON 
+			JSONParser parse = new JSONParser();
+			JSONObject jobj = (JSONObject) parse.parse(terms);
+	//		break-up JSON		
+			JSONArray jKeywords = keywords(jobj);		
+			keywords = arraySearchTerms(jKeywords);		
+			allergies = arraySearchTerms((JSONArray) jobj.get("allergies"));
+			ingredients = arraySearchTerms((JSONArray) jobj.get("ingredients"));
+	//		construct URL
+			boolean prevPart = false;
+			if (keywords.length() > 0) {
+				result += "wt=" + keywords;
+				prevPart = true;
+			}
+			if (allergies.length() > 0) {
+				if (prevPart == true) {
+					result += URL_SEARCH_LINK;
+				}
+				result += "ingExcl=" + allergies;
+				prevPart = true;
+			}
+			if (ingredients.length() > 0) {
+				if (prevPart == true) {
+					result += URL_SEARCH_LINK;
+				}
+				result += "ingIncl=" + ingredients;
+			}
+			return result;
+		} catch (Exception e) {
+			return null;
+		}
+	}
 	
-	private void doSearch(String searchUrl) throws IOException{
+	@SuppressWarnings("unchecked")
+	private static void doSearch(String searchUrl) throws IOException{
 //		Web Scrape
 		final Document doc = Jsoup.connect(searchUrl).get();
 		JSONArray result = new JSONArray();
@@ -140,10 +143,7 @@ public class SearchServer {
 		searchResults = result.toString();
 	}
 	
-	public String getResults() {
-		JSONObject results = new JSONObject();
-		results.put("type", "SearchResults");
-		results.put("data", searchResults);
-		return results.toString();
+	private static String getResults() {
+		return searchResults.toString();
 	}
 }

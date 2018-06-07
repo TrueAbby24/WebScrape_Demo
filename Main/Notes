@@ -22,3 +22,23 @@ SearchRecipe
 	java -cp .:./Main/json-simple-1.1.1.jar:./Main/jsoup-1.11.3.jar:./Main/unirest-java-1.4.9.jar Main/Server {\"type\" : \"RecipeID\", \"data\": \"257193\"}
 	
 	java -cp .:./Main/json-simple-1.1.1.jar:./Main/jsoup-1.11.3.jar:./Main/unirest-java-1.4.9.jar -Dsun.security.pkcs11.enable-solaris=false Main/Server {\"type\" : \"RecipeID\", \"data\": \"257193\"}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+/opt/local/bin/java -cp .:./Main/json-simple-1.1.1.jar:./Main/jsoup-1.11.3.jar:./Main/unirest-java-1.4.9.jar \'-Dsun.security.pkcs11.enable-solaris=false\' Main/SearchServer {%22dietary_req%22:[%22vegan%22],%22allergies%22:[%22nuts%22],%22preferences%22:[],%22ingredients%22:[%22flour%22,%22egg%22],%22keywords%22:[%22white%20chocolate%22]} 	
+	
+	
+	
+	
+	
+	
+	

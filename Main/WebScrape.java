@@ -52,8 +52,6 @@ public class WebScrape {
 	}
 	
 	public static void main(String[] args) throws Exception {
-//		imdbExample();
-//		firstTry();
 		
 //		SEARCH TERMS
 		String buffer;
